@@ -1,8 +1,12 @@
 package pages;
 
 import maps.HomeMap;
-import support.BaseCommands;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import support.DriverInit;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.testng.Assert.assertEquals;
@@ -10,23 +14,28 @@ import static org.testng.Assert.assertEquals;
 public class HomePage {
 
     HomeMap homeMap = new HomeMap();
-    BaseCommands baseCommands = new BaseCommands();
+    DriverInit driverInit = new DriverInit();
+
+    public WebDriver getWebDriver() {
+        return driverInit.getWebDriver();
+    }
 
     public void assertBrowserTitle() {
-        baseCommands.assertBrowserTitle("Spree Demo Site");
+        assertEquals(getWebDriver().getTitle(), "Spree Demo Site");
+
     }
 
     public void clickOnSearchBox() {
-        baseCommands.clickOnElement(homeMap.SEARCH_TEXT_BOX);
+        getWebDriver().findElement(By.cssSelector(homeMap.SEARCH_TEXT_BOX)).click();
     }
 
     public void enterSearchCriteriaToSearchBox(String searchKey) {
         clickOnSearchBox();
-        baseCommands.enterText(homeMap.SEARCH_TEXT_BOX, searchKey);
+        getWebDriver().findElement(By.cssSelector(homeMap.SEARCH_TEXT_BOX)).sendKeys(searchKey);
     }
 
     public void clickOnSearchSubmitButton() {
-        baseCommands.clickOnElement(homeMap.SEARCH_QUERY_SUBMIT);
+        getWebDriver().findElement(By.cssSelector(homeMap.SEARCH_QUERY_SUBMIT)).click();
     }
 
     public String getSearchResultSelector(String searchKey) {
@@ -34,11 +43,12 @@ public class HomePage {
     }
 
     public void waitForSearchResultsVisibility(String searchKey) {
-        baseCommands.waitForElementVisibility(getSearchResultSelector(searchKey));
+        getWebDriver().findElement(By.cssSelector(getSearchResultSelector(searchKey))).isDisplayed();
     }
 
     public String getSearchResult(String searchKey) {
-        return baseCommands.getElementText(getSearchResultSelector(searchKey));
+        return getWebDriver().findElement(By.cssSelector(getSearchResultSelector(searchKey)))
+                .getText();
     }
 
     public void assertSearchResult(String searchKey, String expectedSearchItem) {
@@ -46,15 +56,25 @@ public class HomePage {
     }
 
     public List<String> getSearchResults(String searchKey) {
-        return baseCommands.getElementsText(getSearchResultSelector(searchKey));
+        List<WebElement> webElements = getWebDriver().findElements(By.cssSelector(getSearchResultSelector(searchKey)));
+        List<String> elementsText = new LinkedList<>();
+        if (null != webElements || webElements.isEmpty()) {
+            for (WebElement webElement : webElements) {
+                elementsText.add(webElement.getText());
+            }
+        }
+        return elementsText;
     }
 
     public void clickOnSearchResultItem(String itemName) {
-        baseCommands.clickOnElement(getSearchResultSelector(itemName));
+        getWebDriver().findElement(By.cssSelector(getSearchResultSelector(itemName))).click();
     }
 
     public int numberOfElements(String searchKey) {
-        return baseCommands.numberOfElements(getSearchResultSelector(searchKey));
+        List<WebElement> webElements = getWebDriver().findElements(By.cssSelector(getSearchResultSelector(searchKey)));
+        int counter = 0;
+        if (null != webElements || webElements.isEmpty()) counter = webElements.size();
+        return counter;
     }
 
     public void assertNumberOfSearchResults(String searchKey, int expectedSearchResultNumbers) {
