@@ -20,7 +20,8 @@ public class DriverInit {
             WebDriverManager.chromedriver().setup();
             ChromeOptions options = new ChromeOptions();
             options.addArguments("--headless");
-            options.addArguments("--disable-dev-shm-usage"); // overcome limited resource problems
+            options.addArguments("--disable-dev-shm-usage");// overcome limited resource problems
+            options.addArguments("--disable-gpu");
             options.addArguments("--no-sandbox"); // Bypass OS security model
             options.addArguments("--remote-debugging-port=9222");
             this.driver = new ChromeDriver(options);
@@ -28,7 +29,11 @@ public class DriverInit {
             if (browser.equalsIgnoreCase("chrome")) {
                 WebDriverManager.chromedriver().setup();
             ChromeOptions options = new ChromeOptions();
-            options.addArguments("--headless");
+                options.addArguments("--headless");
+                options.addArguments("--disable-dev-shm-usage"); // overcome limited resource problems
+                options.addArguments("--disable-gpu");
+                options.addArguments("--no-sandbox"); // Bypass OS security model
+                options.addArguments("--remote-debugging-port=9222");
                 this.driver = new ChromeDriver(options);
             }
         }
