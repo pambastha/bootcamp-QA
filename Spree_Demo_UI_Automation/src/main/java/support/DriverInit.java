@@ -17,11 +17,16 @@ public class DriverInit {
     public void getBrowser() {
         if (null == browser || browser.isEmpty()) {
             WebDriverManager.chromedriver().setup();
-            this.driver = new ChromeDriver();
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("--headless");
+
+            this.driver = new ChromeDriver(options);
         } else {
             if (browser.equalsIgnoreCase("chrome")) {
                 WebDriverManager.chromedriver().setup();
-                this.driver = new ChromeDriver();
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("--headless");
+                this.driver = new ChromeDriver(options);
             }
         }
         this.driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
